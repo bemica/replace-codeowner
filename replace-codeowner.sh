@@ -14,20 +14,20 @@ PR_NEEDED=false
 
 # Replace my name in CODEOWNERS files
 if test -f "CODEOWNERS"; then
-  cat CODEOWNERS | sed -e "s/nathan-beneke/bemica/g" > /tmp/CODEOWNERS
+  cat CODEOWNERS | sed -e "s/bemica //g" > /tmp/CODEOWNERS
   cp /tmp/CODEOWNERS CODEOWNERS
   rm /tmp/CODEOWNERS
-  if grep -q "@bemica" "CODEOWNERS"; then
+  if git status | grep -q "Changes not staged for commit"; then
       git add CODEOWNERS
       PR_NEEDED=true
     fi
 fi
 
 if test -f ".github/CODEOWNERS"; then
-  cat .github/CODEOWNERS | sed -e "s/nathan-beneke/bemica/g" > /tmp/CODEOWNERS
+  cat .github/CODEOWNERS | sed -e "s/bemica //g" > /tmp/CODEOWNERS
   cp /tmp/CODEOWNERS .github/CODEOWNERS
   rm /tmp/CODEOWNERS
-  if grep -q "@bemica" ".github/CODEOWNERS"; then
+  if git status | grep -q "Changes not staged for commit"; then
     git add .github/CODEOWNERS
     PR_NEEDED=true
   fi
@@ -35,10 +35,10 @@ fi
 
 # Commit and open PR
 if $PR_NEEDED; then
-  git commit -m "Replace Mica's old github handle in codeowners file"
-  git push --set-upstream origin "mica-has-a-new-name"
-  gh pr create --title "Mica has a new github handle" --body "replace old github handle in CODEOWNERS with new one" \
-    --base "$DEFAULT_BRANCH" --head "mica-has-a-new-name"
+  git commit -m "Offboard @bemica"
+  git push --set-upstream origin "offboard-mica"
+  gh pr create --title "Offboard @bemica" --body "Remove Mica from CODEOWNERS" \
+    --base "$DEFAULT_BRANCH" --head "offboard-mica"
 fi
 
 git switch "$DEFAULT_BRANCH"
